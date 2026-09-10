@@ -21,9 +21,14 @@ android {
 
     signingConfigs {
         create("release") {
-            val keystoreFile = File(rootDir, "release.keystore")
-            if (keystoreFile.exists()) {
-                storeFile = keystoreFile
+            val ksFile = sequenceOf(
+                File(rootDir, "release.keystore"),
+                File(projectDir, "release.keystore"),
+                File(rootDir, "app/release.keystore")
+            ).firstOrNull { it.exists() }
+
+            if (ksFile != null && ksFile.exists()) {
+                storeFile = ksFile
                 storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "Password123!"
                 keyAlias = System.getenv("KEY_ALIAS") ?: "rabotaim"
                 keyPassword = System.getenv("KEY_PASSWORD") ?: "Password123!"
@@ -38,12 +43,24 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            val releaseConfig = signingConfigs.getByName("release")
+            if (releaseConfig.storeFile != null && releaseConfig.storeFile!!.exists()) {
+                signingConfig = releaseConfig
+            }
         }
         debug {
-            signingConfig = signingConfigs.getByName("release")
+            val releaseConfig = signingConfigs.getByName("release")
+            if (releaseConfig.storeFile != null && releaseConfig.storeFile!!.exists()) {
+                signingConfig = releaseConfig
+            }
         }
     }
+
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

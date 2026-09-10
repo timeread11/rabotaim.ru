@@ -19,14 +19,9 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
 
-      - name: Grant Execute Permission for Gradlew
-        run: |
-          if [ -d "android-app" ]; then cd android-app; fi
-          if [ -f "./gradlew" ]; then
-            chmod +x ./gradlew
-          fi
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
       - name: Prepare Release Keystore
         run: |
@@ -41,7 +36,14 @@ jobs:
       - name: Build Signed Release APK & AAB
         run: |
           if [ -d "android-app" ]; then cd android-app; fi
-          ./gradlew assembleRelease bundleRelease --stacktrace
+          if [ -f "./gradle/wrapper/gradle-wrapper.jar" ]; then
+            chmod +x ./gradlew
+            ./gradlew assembleRelease bundleRelease --stacktrace
+          else
+            gradle wrapper
+            chmod +x ./gradlew
+            ./gradlew assembleRelease bundleRelease --stacktrace
+          fi
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v4

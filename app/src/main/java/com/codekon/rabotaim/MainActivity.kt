@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         settings.loadWithOverviewMode = true
         settings.userAgentString = settings.userAgentString + " RabotaimApp/1.0.0"
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.21) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             settings.mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
         }
 

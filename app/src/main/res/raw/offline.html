@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Нет подключения</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 40px 24px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            max-width: 360px;
+            width: 100%;
+        }
+        .icon-box {
+            width: 72px;
+            height: 72px;
+            background: #fee2e2;
+            color: #e7000a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .icon-box svg {
+            width: 36px;
+            height: 36px;
+            fill: currentColor;
+        }
+        h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+        p {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+        .btn-reload {
+            display: inline-block;
+            width: 100%;
+            padding: 14px 20px;
+            background-color: #e7000a;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(231, 0, 10, 0.25);
+            transition: background 0.2s ease;
+        }
+        .btn-reload:active {
+            background-color: #c40008;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon-box">
+            <svg viewBox="0 0 24 24">
+                <path d="M23.64 7c-.45-.34-4.93-4-11.64-4-1.5 0-2.89.19-4.15.5L18.18 13.8 23.64 7zM3.27 1.44L2 2.71l2.07 2.07C2.18 5.6 1.05 6.42 0.36 7l11.63 14.49.01.01.01-.01L15.6 17.02l4.13 4.13 1.27-1.27L3.27 1.44z"/>
+            </svg>
+        </div>
+        <h2>Нет подключения</h2>
+        <p>Отсутствует подключение к интернету. Проверьте сеть и попробуйте снова.</p>
+        <button class="btn-reload" onclick="tryReload()">Обновить страницу</button>
+    </div>
+
+    <script>
+        function tryReload() {
+            if (window.Android && window.Android.reload) {
+                window.Android.reload();
+            } else {
+                window.location.href = 'https://rabotaim.ru';
+            }
+        }
+    </script>
+</body>
+</html>

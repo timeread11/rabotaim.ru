@@ -42,14 +42,13 @@ jobs:
       - name: Build Signed Release APK & AAB
         run: |
           if [ -d "android-app" ]; then cd android-app; fi
-          if [ -f "./gradle/wrapper/gradle-wrapper.jar" ]; then
-            chmod +x ./gradlew
-            ./gradlew assembleRelease bundleRelease --stacktrace
-          else
-            gradle wrapper
-            chmod +x ./gradlew
-            ./gradlew assembleRelease bundleRelease --stacktrace
+          mkdir -p gradle/wrapper
+          if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+            echo "Downloading gradle-wrapper.jar for Gradle 8.4..."
+            curl -sSL -o gradle/wrapper/gradle-wrapper.jar https://raw.githubusercontent.com/gradle/gradle/v8.4.0/gradle/wrapper/gradle-wrapper.jar
           fi
+          chmod +x ./gradlew
+          ./gradlew assembleRelease bundleRelease --stacktrace
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v4

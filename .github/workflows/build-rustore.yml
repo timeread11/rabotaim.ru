@@ -31,6 +31,9 @@ jobs:
             echo "Decoded keystore from GitHub Secret."
           elif [ -f "release.keystore" ]; then
             echo "Using pre-packaged release.keystore."
+          else
+            echo "Generating fallback release.keystore via keytool..."
+            keytool -genkey -v -keystore release.keystore -alias rabotaim -keyalg RSA -keysize 2048 -validity 36500 -storepass Password123! -keypass Password123! -dname "CN=Работа, OU=Codekon, O=Codekon, C=RU"
           fi
           if [ -f "release.keystore" ]; then
             cp release.keystore app/release.keystore 2>/dev/null || true
@@ -41,11 +44,11 @@ jobs:
           if [ -d "android-app" ]; then cd android-app; fi
           if [ -f "./gradle/wrapper/gradle-wrapper.jar" ]; then
             chmod +x ./gradlew
-            ./gradlew assembleRelease bundleRelease --stacktrace --info
+            ./gradlew assembleRelease bundleRelease --stacktrace
           else
             gradle wrapper
             chmod +x ./gradlew
-            ./gradlew assembleRelease bundleRelease --stacktrace --info
+            ./gradlew assembleRelease bundleRelease --stacktrace
           fi
 
       - name: Upload Signed APK

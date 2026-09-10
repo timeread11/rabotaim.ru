@@ -23,15 +23,14 @@ jobs:
 
       - name: Grant Execute Permission for Gradlew
         run: |
-          if [ -f "./android-app/gradlew" ]; then
-            chmod +x ./android-app/gradlew
-          elif [ -f "./gradlew" ]; then
+          if [ -d "android-app" ]; then cd android-app; fi
+          if [ -f "./gradlew" ]; then
             chmod +x ./gradlew
           fi
 
       - name: Prepare Release Keystore
         run: |
-          cd android-app
+          if [ -d "android-app" ]; then cd android-app; fi
           if [ -n "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" ]; then
             echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
             echo "Decoded keystore from GitHub Secret."
@@ -41,23 +40,29 @@ jobs:
 
       - name: Build Signed Release APK & AAB
         run: |
-          cd android-app
+          if [ -d "android-app" ]; then cd android-app; fi
           ./gradlew assembleRelease bundleRelease --stacktrace
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v4
         with:
           name: RuStore-Signed-APK
-          path: android-app/app/build/outputs/apk/release/app-release.apk
+          path: |
+            android-app/app/build/outputs/apk/release/app-release.apk
+            app/build/outputs/apk/release/app-release.apk
 
       - name: Upload Signed AAB
         uses: actions/upload-artifact@v4
         with:
           name: RuStore-Signed-AAB
-          path: android-app/app/build/outputs/bundle/release/app-release.aab
+          path: |
+            android-app/app/build/outputs/bundle/release/app-release.aab
+            app/build/outputs/bundle/release/app-release.aab
 
       - name: Upload RuStore Icon (512x512)
         uses: actions/upload-artifact@v4
         with:
           name: RuStore-Icon-512
-          path: android-app/rustore_icon_512.png
+          path: |
+            android-app/rustore_icon_512.png
+            rustore_icon_512.png
